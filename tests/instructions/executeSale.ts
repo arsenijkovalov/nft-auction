@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { Program, BN } from "@coral-xyz/anchor";
+import { Program, BN, Wallet } from "@coral-xyz/anchor";
 import { Auctioneer } from "../../target/types/auctioneer";
 import * as pda from "../pda";
 import {
@@ -10,6 +10,14 @@ import {
   Creator,
 } from "../interfaces";
 import { AUCTION_HOUSE_PROGRAM_ID } from "../generated";
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import { ONE_SOL } from "../utils";
 
 export async function executeSale({
   auctioneerProgram,
@@ -21,17 +29,42 @@ export async function executeSale({
   buyAccounts,
   creators,
   tokenSize,
+  signerKeypair,
+  payer,
 }: {
   auctioneerProgram: Program<Auctioneer>;
   auctionHouse: AuctionHouseData;
   token: NFT;
-  buyer: anchor.web3.PublicKey;
+  buyer: PublicKey;
   buyerPrice: number;
   sellAccounts: SellAccounts;
   buyAccounts: BuyAccounts;
   creators?: Creator[];
   tokenSize: number;
+  signerKeypair: Keypair;
+  payer?: Wallet;
 }) {
+  if (signerKeypair.publicKey.equals(auctionHouse.authority) && payer) {
+    const auctionHouseFeeAccountInitBalanceTx = await sendAndConfirmTransaction(
+      auctioneerProgram.provider.connection,
+      new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: payer.publicKey,
+          toPubkey: auctionHouse.auctionHouseFeeAccount,
+          lamports: 10 * ONE_SOL,
+        })
+      ),
+      [payer.payer]
+    );
+
+    console.log(
+      "Transaction [Init Auction House Fee Account Balance]",
+      auctionHouseFeeAccountInitBalanceTx
+    );
+  } else if (signerKeypair.publicKey.equals(auctionHouse.authority) && !payer) {
+    throw "Please, provide Payer to deposit to Auction House Fee Account, because the Signer is the Auction House authority";
+  }
+
   const [auctioneerAuthorityAddress, auctioneerAuthorityBump] =
     pda.findAuctioneerAuthorityAddress({
       auctionHouseAddress: auctionHouse.address,
@@ -73,7 +106,7 @@ export async function executeSale({
     }
   }
 
-  const executeSellTx = await auctioneerProgram.methods
+  const executeSellIx = await auctioneerProgram.methods
     .executeSale(
       escrowBump,
       freeSellerTradeStateBump,
@@ -106,7 +139,13 @@ export async function executeSale({
       programAsSigner: sellAccounts.programAsSigner,
     })
     .remainingAccounts(remainingAccounts)
-    .rpc();
+    .instruction();
+
+  const executeSellTx = await sendAndConfirmTransaction(
+    auctioneerProgram.provider.connection,
+    new Transaction().add(executeSellIx),
+    [signerKeypair]
+  );
 
   console.log("Transaction [Execute Sell]", executeSellTx);
 }

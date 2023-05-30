@@ -16,6 +16,11 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-anchor-lang = "0.27.0"
-anchor-spl = "0.27.0"
-auction_house = { path = "../auction_house", features = ["cpi", "no-entrypoint"]}
+anchor-lang = { git = "https://github.com/coral-xyz/anchor" }
+anchor-spl = { git = "https://github.com/coral-xyz/anchor" }
+auction_house = { path = "../auction_house", features = ["cpi", "no-entrypoint"] }
+nft_minter = { path = "../nft_minter", features = ["no-entrypoint"] }
+
+[dev-dependencies]
+solana-program-test = "1.14"
+anchor-client = { git = "https://github.com/coral-xyz/anchor" }

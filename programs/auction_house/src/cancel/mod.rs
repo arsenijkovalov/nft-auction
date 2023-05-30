@@ -89,6 +89,7 @@ pub fn auctioneer_cancel<'info>(
 }
 
 #[allow(clippy::needless_lifetimes)]
+#[allow(clippy::extra_unused_lifetimes)]
 fn cancel_logic<'c, 'info>(
     accounts: &mut AuctioneerCancel<'info>,
     buyer_price: u64,

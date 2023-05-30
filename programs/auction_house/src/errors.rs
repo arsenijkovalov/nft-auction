@@ -87,6 +87,6 @@ pub enum AuctionHouseError {
     AuctionHouseAlreadyDelegated,
 
     // 6021
-    #[msg("Insufficient funds in escrow account to purchase.")]
+    #[msg("Insufficient funds in escrow account.")]
     InsufficientFunds,
 }

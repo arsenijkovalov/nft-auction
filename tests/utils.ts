@@ -32,7 +32,7 @@ export const createSystemAccount = async ({
       lamports: 10 * ONE_SOL,
     })
   );
-  
+
   await provider.sendAndConfirm(tx, [payer.payer, newAccountKeypair]);
 
   return newAccountKeypair;

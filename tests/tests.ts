@@ -145,6 +145,8 @@ describe("auction_house", () => {
       buyAccounts: bidder1BuyAccounts,
       creators,
       tokenSize: TOKEN_SIZE,
+      signerKeypair: auctionHouse.authorityKeypair,
+      payer: payer,
     });
   });
 
@@ -212,13 +214,13 @@ describe("auction_house", () => {
       token,
       startTime: Math.round(Date.now() / 1000),
       endTime: Math.round(Date.now() / 1000) + 10,
-      allowHighBidCancel: true,
       tokenSize: TOKEN_SIZE,
     });
 
-    const buyerKeypair = await createSystemAccount({ provider, payer });
+    // First bidder
 
-    const depositAmount = 2 * ONE_SOL;
+    const buyerKeypair = await createSystemAccount({ provider, payer });
+    const depositAmount = 5 * ONE_SOL;
     await deposit({
       auctioneerProgram,
       auctionHouse,
@@ -240,6 +242,34 @@ describe("auction_house", () => {
       buyerPrice: bidAmount,
       tokenSize: TOKEN_SIZE,
     });
+
+    // Second bidder
+
+    const buyerKeypair2 = await createSystemAccount({ provider, payer });
+    const depositAmount2 = 5 * ONE_SOL;
+    await deposit({
+      auctioneerProgram,
+      auctionHouse,
+      token,
+      buyerKeypair: buyerKeypair2,
+      amount: depositAmount2,
+      tokenSize: TOKEN_SIZE,
+    });
+
+    await sleep(1000);
+
+    const bidAmount2 = 2 * ONE_SOL;
+    const {} = await buy({
+      auctioneerProgram,
+      auctionHouse,
+      token,
+      buyerKeypair: buyerKeypair2,
+      sellerAddress: sellAccounts.wallet,
+      buyerPrice: bidAmount2,
+      tokenSize: TOKEN_SIZE,
+    });
+
+    await sleep(1000);
 
     await cancel({
       auctioneerProgram,

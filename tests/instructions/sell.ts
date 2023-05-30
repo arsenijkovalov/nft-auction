@@ -14,7 +14,6 @@ export async function sell({
   minBidIncrement,
   timeExtPeriod,
   timeExtDelta,
-  allowHighBidCancel,
   tokenSize,
 }: {
   auctioneerProgram: Program<Auctioneer>;
@@ -26,7 +25,6 @@ export async function sell({
   minBidIncrement?: number;
   timeExtPeriod?: number;
   timeExtDelta?: number;
-  allowHighBidCancel?: boolean;
   tokenSize: number;
 }) {
   const [sellerTradeStateAddress, sellerTradeStateBump] =
@@ -98,8 +96,7 @@ export async function sell({
       new BN(reservePrice ?? 0),
       new BN(minBidIncrement ?? 0),
       timeExtPeriod ?? 0,
-      timeExtDelta ?? 0,
-      allowHighBidCancel ?? false
+      timeExtDelta ?? 0
     )
     .accounts(sellAccounts)
     .signers([token.owner])

@@ -2,9 +2,9 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-auction_house = "9JfwzMEdA6FQF4xtH2AtzefpaXPsRk3Ky1muQvuun4yz"
-auctioneer = "GrZrqXcE3nwRZ7eaoXocKvBRioYEoeZR4hQShJ5VN2oZ"
-nft_minter = "AnsyRBhd4QNEWZH9nBJrucVgMz9LT9qtnsTGGjmUW6mt"
+auction_house = "FMrPvDk4xZNykJ2aWCmyKCzQ12qhJ6SR9tS67fhLbx8x"
+auctioneer = "9sCGJFSVb7zyXfozXXiVyemaaNtbHVEiRy81HmQzGWG9"
+nft_minter = "FYUpechM9AEW579boyznhD7vq3xumeC3BstW4PB1qGEp"
 
 [registry]
 url = "https://api.apr.dev"

@@ -1,4 +1,5 @@
 #![allow(clippy::result_large_err)]
+#![allow(clippy::too_many_arguments)]
 pub mod auctioneer;
 pub mod bid;
 pub mod cancel;
@@ -6,6 +7,7 @@ pub mod constants;
 pub mod deposit;
 pub mod errors;
 pub mod execute_sale;
+pub mod pda;
 pub mod sell;
 pub mod state;
 pub mod utils;
@@ -28,7 +30,7 @@ use anchor_spl::{
     token::{Mint, Token, TokenAccount},
 };
 
-anchor_lang::declare_id!("9JfwzMEdA6FQF4xtH2AtzefpaXPsRk3Ky1muQvuun4yz");
+anchor_lang::declare_id!("FMrPvDk4xZNykJ2aWCmyKCzQ12qhJ6SR9tS67fhLbx8x");
 
 #[program]
 pub mod auction_house {
@@ -429,12 +431,6 @@ pub mod auction_house {
     ) -> Result<()> {
         auctioneer::delegate_auctioneer(ctx)
     }
-
-    pub fn update_auctioneer<'info>(
-        ctx: Context<'_, '_, '_, 'info, UpdateAuctioneer<'info>>,
-    ) -> Result<()> {
-        auctioneer::update_auctioneer(ctx)
-    }
 }
 
 /// Accounts for the [`create_auction_house` handler](auction_house/fn.create_auction_house.html).
@@ -602,7 +598,7 @@ pub struct CloseEscrowAccount<'info> {
             PREFIX.as_bytes(),
             auction_house.creator.as_ref(),
             auction_house.treasury_mint.as_ref()
-        ], 
+        ],
         bump = auction_house.bump
     )]
     pub auction_house: Account<'info, AuctionHouse>,

@@ -163,6 +163,7 @@ pub fn auctioneer_sell<'info>(
 }
 
 /// Create a sell bid by creating a `seller_trade_state` account and approving the program as the token delegate.
+#[allow(clippy::extra_unused_lifetimes)]
 fn sell_logic<'c, 'info>(
     accounts: &mut AuctioneerSell<'info>,
     program_id: &Pubkey,
