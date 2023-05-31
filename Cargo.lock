@@ -394,11 +394,13 @@ dependencies = [
 name = "auction_house"
 version = "0.1.0"
 dependencies = [
+ "anchor-client",
  "anchor-lang",
  "anchor-spl",
  "arrayref",
  "mpl-token-auth-rules",
  "mpl-token-metadata",
+ "solana-program-test",
  "spl-associated-token-account",
  "spl-token",
  "thiserror",
