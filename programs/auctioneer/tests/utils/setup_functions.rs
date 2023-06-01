@@ -17,6 +17,9 @@ use nft_minter::utils::{token_metadata_program_id, Creator};
 use solana_program_test::{BanksClientError, ProgramTest, ProgramTestContext};
 use std::io;
 
+// Error = Error code
+pub const ERR_ACCOUNT_NOT_INITIALIZED: u32 = 3012;
+
 pub const ONE_SOL: u64 = 1_000_000_000;
 
 pub fn assert_error(error: BanksClientError, expected_error: u32) {
